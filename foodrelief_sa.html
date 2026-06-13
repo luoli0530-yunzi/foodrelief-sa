@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FoodReliefSA · South Australia Free Food Resources</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --warm-bg:#FDF7F0;--card-bg:#fff;--orange:#D4711A;--orange-light:#FDF3E3;
+  --green:#4A9B6F;--green-light:#EAF5EE;--amber:#C8861A;
+  --brown-dark:#2C1F14;--brown-mid:#7A5A3A;--brown-soft:#B0917A;
+  --border:#EDD9BF;--border-light:#F0DEC8;
+}
+body{font-family:'Nunito',sans-serif;background:var(--warm-bg);color:var(--brown-dark);min-height:100vh;overflow-x:hidden}
+nav{background:#fff;border-bottom:1.5px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:200}
+.logo{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:900;color:var(--orange);text-decoration:none}
+.logo-icon{width:36px;height:36px;background:var(--orange);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.lang-toggle{font-size:12px;font-weight:800;color:var(--brown-mid);background:var(--warm-bg);border:1.5px solid var(--border);border-radius:20px;padding:5px 14px;cursor:pointer;transition:all .15s;font-family:'Nunito',sans-serif}
+.lang-toggle:hover{border-color:var(--orange);color:var(--orange)}
+.hero-section{background:var(--warm-bg);padding:0 20px;position:relative;min-height:380px;overflow:hidden}
+.hero-section::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,#E8C9A0 1px,transparent 1px);background-size:28px 28px;opacity:.35;pointer-events:none}
+.doodle{position:absolute;pointer-events:none;user-select:none}
+.hills{position:absolute;bottom:0;left:0;right:0;pointer-events:none}
+.hero-content{position:relative;z-index:2;text-align:center;padding:40px 0 170px;max-width:560px;margin:0 auto}
+.hero-pill{display:inline-block;background:#fff;border:1.5px solid #E8C9A0;color:#B07A3A;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:5px 16px;border-radius:30px;margin-bottom:18px}
+.hero-h1{font-size:32px;font-weight:900;line-height:1.25;color:var(--brown-dark);margin-bottom:14px}
+.hero-h1 em{color:var(--orange);font-style:normal}
+.hero-sub{font-size:15px;color:var(--brown-mid);line-height:1.75;margin-bottom:30px}
+.search-wrap{position:relative;max-width:480px;margin:0 auto 20px}
+.search-bar{display:flex;align-items:center;gap:8px;background:#fff;border-radius:50px;border:2px solid #E8C9A0;padding:6px 6px 6px 20px;box-shadow:0 4px 16px rgba(180,100,30,.1)}
+.search-bar input{flex:1;border:none;outline:none;font-family:'Nunito',sans-serif;font-size:14px;color:var(--brown-dark);background:transparent}
+.search-bar input::placeholder{color:var(--brown-soft)}
+.search-btn{background:var(--orange);color:#fff;border:none;border-radius:40px;padding:9px 22px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap;transition:background .15s,transform .1s}
+.search-btn:hover{background:#B85C10;transform:scale(1.03)}
+.search-status{font-size:12px;color:var(--brown-soft);margin-top:8px;min-height:18px;text-align:center}
+.search-status.loading{color:var(--orange)}
+.search-status.error{color:#C0392B}
+.suggest-box{position:absolute;left:0;right:0;top:100%;background:#fff;border:1.5px solid #E8C9A0;border-top:none;border-radius:0 0 18px 18px;z-index:50;box-shadow:0 8px 24px rgba(180,100,30,.12);max-height:260px;overflow-y:auto;display:none}
+.suggest-item{padding:11px 20px;font-size:13px;color:var(--brown-dark);cursor:pointer;display:flex;align-items:center;gap:10px;border-bottom:.5px solid var(--border-light);transition:background .1s}
+.suggest-item:last-child{border-bottom:none}
+.suggest-item:hover{background:var(--orange-light)}
+.suggest-name{flex:1;font-weight:700}
+.suggest-dist{font-size:11px;color:var(--brown-soft);white-space:nowrap;background:var(--warm-bg);padding:2px 8px;border-radius:10px}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:560px;margin:0 auto}
+.chip{display:flex;align-items:center;gap:5px;padding:7px 15px;border-radius:30px;border:1.5px solid var(--border);background:#fff;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;color:var(--brown-mid);cursor:pointer;transition:all .15s}
+.chip:hover{border-color:var(--orange);color:var(--orange)}
+.chip.on{background:var(--orange);border-color:var(--orange);color:#fff}
+.chip-dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.7;flex-shrink:0}
+.cards-area{background:var(--warm-bg);padding:0 20px 60px;position:relative;z-index:3}
+.cards-bar{display:flex;align-items:center;justify-content:space-between;max-width:900px;margin:0 auto 18px;padding-top:8px}
+.cards-bar-title{font-size:16px;font-weight:800;color:var(--brown-dark)}
+.cards-bar-count{font-size:13px;font-weight:600;color:var(--brown-soft)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;max-width:900px;margin:0 auto}
+.card{background:var(--card-bg);border-radius:20px;border:1.5px solid var(--border);padding:20px;cursor:pointer;transition:transform .2s,box-shadow .2s;position:relative;overflow:hidden;text-decoration:none;display:block;color:inherit}
+.card::after{content:'';position:absolute;bottom:0;right:0;width:90px;height:90px;border-radius:50%;opacity:.06;pointer-events:none;transform:translate(28px,28px)}
+.card.cfree::after{background:#4A9B6F}
+.card.clow::after{background:#C8861A}
+.card.cappt::after{background:#6B7FC4}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(180,100,30,.14)}
+.card-stripe{position:absolute;top:0;left:0;right:0;height:4px;border-radius:20px 20px 0 0}
+.cfree .card-stripe{background:#4A9B6F}
+.clow .card-stripe{background:#C8861A}
+.cappt .card-stripe{background:#6B7FC4}
+.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px;margin-top:6px}
+.card-icon-wrap{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.cfree .card-icon-wrap{background:#EAF5EE}
+.clow .card-icon-wrap{background:#FDF3E3}
+.cappt .card-icon-wrap{background:#EEF0FA}
+.badge{font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:20px;flex-shrink:0}
+.cfree .badge{background:#EAF5EE;color:#2D7A52}
+.clow .badge{background:#FDF3E3;color:#8A5C10}
+.cappt .badge{background:#EEF0FA;color:#4A5CA0}
+.card-name{font-size:15px;font-weight:800;color:var(--brown-dark);line-height:1.3;margin-bottom:7px}
+.card-desc{font-size:13px;color:var(--brown-mid);line-height:1.65;margin-bottom:14px}
+.card-info{border-top:1px solid var(--border-light);padding-top:12px;display:flex;flex-direction:column;gap:6px}
+.info-row{display:flex;align-items:flex-start;gap:7px;font-size:12px;color:var(--brown-mid)}
+.info-row strong{color:var(--brown-dark);font-weight:700}
+.info-ic{font-size:14px;flex-shrink:0;margin-top:1px}
+.dist-pill{display:inline-flex;align-items:center;gap:4px;background:#EAF5EE;color:#2D7A52;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;margin-top:10px}
+.card-link-hint{margin-top:10px;font-size:12px;color:var(--orange);font-weight:800;display:flex;align-items:center;gap:5px}
+.appt-note{margin-top:10px;padding:8px 12px;background:#FFF8ED;border:1px solid #F0D898;border-radius:10px;font-size:12px;color:#8A6520;font-weight:700}
+.empty{text-align:center;padding:80px 24px;color:var(--brown-soft);display:none}
+.empty p{font-size:15px;margin-top:10px}
+.section-divider{max-width:900px;margin:0 auto 14px;padding-top:20px;font-size:13px;font-weight:800;color:var(--brown-soft);display:flex;align-items:center;gap:10px}
+.section-divider::after{content:'';flex:1;height:1px;background:var(--border-light)}
+.footer-band{background:#fff;border-top:1.5px solid var(--border);padding:44px 24px 52px;text-align:center;position:relative;overflow:hidden}
+.footer-band::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,#F0D8B0 1px,transparent 1px);background-size:22px 22px;opacity:.25;pointer-events:none}
+.footer-illus{display:flex;justify-content:center;align-items:flex-end;gap:16px;margin-bottom:28px;position:relative}
+.footer-quote{position:relative;max-width:540px;margin:0 auto 8px}
+.footer-quote blockquote{font-size:18px;line-height:1.9;color:var(--brown-dark);font-weight:700;margin-bottom:14px}
+.footer-quote blockquote em{color:var(--orange);font-style:normal}
+.footer-quote p{font-size:13px;color:var(--brown-mid);line-height:1.85}
+.footer-btn{background:var(--green);color:#fff;border:none;border-radius:14px;padding:12px 30px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:background .15s;position:relative;margin-top:22px}
+.footer-btn:hover{background:#357A56}
+@media(max-width:600px){.hero-h1{font-size:24px}.grid{grid-template-columns:1fr}.footer-quote blockquote{font-size:15px}.doodle{display:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="#"><div class="logo-icon">🥗</div>FoodReliefSA</a>
+  <button class="lang-toggle" id="lang-btn" onclick="toggleLang()">EN</button>
+</nav>
+
+<div class="hero-section">
+  <div class="doodle" style="top:18px;left:5%;opacity:.9">
+    <svg width="54" height="54" viewBox="0 0 54 54" fill="none" aria-hidden="true"><ellipse cx="27" cy="30" rx="20" ry="12" fill="#F5C07A" stroke="#C8861A" stroke-width="1.5"/><ellipse cx="27" cy="25" rx="18" ry="10" fill="#F9D89A" stroke="#C8861A" stroke-width="1.5"/><ellipse cx="27" cy="23" rx="14" ry="7" fill="#FDEDC0"/><ellipse cx="22" cy="23" rx="2" ry="1" fill="#C8861A" transform="rotate(-20 22 23)"/><ellipse cx="27" cy="21" rx="2" ry="1" fill="#C8861A"/><ellipse cx="32" cy="23" rx="2" ry="1" fill="#C8861A" transform="rotate(-10 32 23)"/></svg>
+  </div>
+  <div class="doodle" style="top:12px;right:7%;opacity:.9">
+    <svg width="52" height="60" viewBox="0 0 52 60" fill="none" aria-hidden="true"><path d="M26 8 Q30 20 28 50 Q26 56 24 50 Q22 20 26 8Z" fill="#F07030" stroke="#C05020" stroke-width="1.2"/><path d="M26 10 Q20 2 15 6 Q20 10 26 12Z" fill="#4A9B6F" stroke="#357A56" stroke-width="1"/><path d="M26 10 Q26 0 22 2 Q23 8 26 12Z" fill="#5DB077"/><path d="M26 10 Q32 2 37 6 Q32 10 26 12Z" fill="#4A9B6F" stroke="#357A56" stroke-width="1"/></svg>
+  </div>
+  <div class="doodle" style="top:55px;left:14%;opacity:.85">
+    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true"><path d="M22 10 Q35 10 38 24 Q38 38 22 40 Q6 38 6 24 Q6 10 22 10Z" fill="#E84040" stroke="#B03030" stroke-width="1.5"/><path d="M22 10 Q22 4 27 3 Q26 8 22 10Z" fill="#4A9B6F"/><ellipse cx="15" cy="20" rx="4" ry="5" fill="#F06060" opacity=".4"/></svg>
+  </div>
+  <div class="doodle" style="top:48px;right:15%;opacity:.85">
+    <svg width="50" height="50" viewBox="0 0 50 50" fill="none" aria-hidden="true"><rect x="21" y="32" width="8" height="16" rx="3" fill="#4A9B6F" stroke="#357A56" stroke-width="1.2"/><circle cx="25" cy="26" r="10" fill="#5DB077" stroke="#357A56" stroke-width="1.2"/><circle cx="17" cy="30" r="7" fill="#4A9B6F" stroke="#357A56" stroke-width="1"/><circle cx="33" cy="30" r="7" fill="#4A9B6F" stroke="#357A56" stroke-width="1"/><circle cx="25" cy="18" r="7" fill="#6DC48A" stroke="#4A9B6F" stroke-width="1"/></svg>
+  </div>
+  <div class="doodle" style="bottom:130px;left:3%;opacity:.75">
+    <svg width="42" height="42" viewBox="0 0 42 42" fill="none" aria-hidden="true"><circle cx="21" cy="24" r="16" fill="#E84050" stroke="#B03030" stroke-width="1.5"/><path d="M21 9 Q21 4 25 3 Q24 8 21 9Z" fill="#4A9B6F"/><path d="M21 9 Q17 3 13 5 Q17 8 21 9Z" fill="#5DB077"/><path d="M21 9 Q25 3 29 5 Q25 8 21 9Z" fill="#4A9B6F"/><ellipse cx="15" cy="20" rx="3" ry="4" fill="#F06070" opacity=".4"/></svg>
+  </div>
+  <div class="doodle" style="bottom:120px;right:4%;opacity:.75">
+    <svg width="46" height="50" viewBox="0 0 46 50" fill="none" aria-hidden="true"><rect x="5" y="22" width="36" height="24" rx="8" fill="#F9C46A" stroke="#C8861A" stroke-width="1.5"/><rect x="2" y="19" width="42" height="8" rx="4" fill="#FDEDC0" stroke="#C8861A" stroke-width="1.5"/><rect x="0" y="20" width="8" height="6" rx="3" fill="#F5C07A" stroke="#C8861A" stroke-width="1.2"/><rect x="38" y="20" width="8" height="6" rx="3" fill="#F5C07A" stroke="#C8861A" stroke-width="1.2"/><path d="M16 16 Q14 10 16 6" stroke="#C8861A" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M23 14 Q21 8 23 4" stroke="#C8861A" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M30 16 Q28 10 30 6" stroke="#C8861A" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+  </div>
+
+  <svg class="hills" viewBox="0 0 700 160" preserveAspectRatio="none" style="display:block;height:160px" aria-hidden="true">
+    <path d="M0,120 Q80,60 180,90 Q280,120 360,70 Q440,20 540,80 Q620,120 700,90 L700,160 L0,160Z" fill="#EAF5EE" opacity="0.7"/>
+    <path d="M0,140 Q100,100 200,120 Q320,140 400,100 Q500,60 600,110 Q650,130 700,120 L700,160 L0,160Z" fill="#D4EDD9" opacity="0.8"/>
+    <path d="M0,155 Q150,130 280,148 Q400,160 520,140 Q620,125 700,148 L700,160 L0,160Z" fill="#C0E4C8"/>
+  </svg>
+
+  <div class="hero-content">
+    <div class="hero-pill" id="hero-pill"></div>
+    <h1 class="hero-h1" id="hero-h1"></h1>
+    <p class="hero-sub" id="hero-sub"></p>
+    <div class="search-wrap">
+      <div class="search-bar">
+        <svg width="16" height="16" fill="none" stroke="#B0917A" stroke-width="2" stroke-linecap="round" style="flex-shrink:0" aria-hidden="true"><circle cx="7" cy="7" r="5"/><line x1="11" y1="11" x2="15" y2="15"/></svg>
+        <input type="text" id="srch" autocomplete="off" oninput="onInput()" onfocus="onInput()" onblur="hideSuggest()"/>
+        <button class="search-btn" id="search-btn" onclick="doSearch()"></button>
+      </div>
+      <div class="suggest-box" id="suggest"></div>
+      <div class="search-status" id="search-status"></div>
+    </div>
+    <div class="filter-row">
+      <button class="chip on" data-f="all" onclick="setF(this)"><span class="chip-dot"></span><span class="tl" data-k="all"></span></button>
+      <button class="chip" data-f="free" onclick="setF(this)"><span class="chip-dot" style="background:#4A9B6F"></span><span class="tl" data-k="free"></span></button>
+      <button class="chip" data-f="low" onclick="setF(this)"><span class="chip-dot" style="background:#C8861A"></span><span class="tl" data-k="low"></span></button>
+      <button class="chip" data-f="north" onclick="setF(this)">📍 <span class="tl" data-k="north"></span></button>
+      <button class="chip" data-f="south" onclick="setF(this)">📍 <span class="tl" data-k="south"></span></button>
+      <button class="chip" data-f="cbd" onclick="setF(this)">📍 <span class="tl" data-k="cbd"></span></button>
+      <button class="chip" data-f="noAppt" onclick="setF(this)">🚶 <span class="tl" data-k="noAppt"></span></button>
+    </div>
+  </div>
+</div>
+
+<div class="cards-area">
+  <div class="cards-bar">
+    <div class="cards-bar-title" id="bar-title"></div>
+    <div class="cards-bar-count" id="cnt"></div>
+  </div>
+  <div id="grid-wrap">
+    <div class="grid" id="grid"></div>
+  </div>
+  <div class="empty" id="empty"><div style="font-size:42px">🌱</div><p id="empty-txt"></p></div>
+</div>
+
+<div class="footer-band">
+  <div class="footer-illus" aria-hidden="true">
+    <svg width="36" height="40" viewBox="0 0 36 40" fill="none"><rect x="12" y="24" width="12" height="14" rx="3" fill="#4A9B6F" stroke="#357A56" stroke-width="1"/><circle cx="18" cy="20" r="8" fill="#5DB077" stroke="#357A56" stroke-width="1"/><circle cx="11" cy="24" r="5" fill="#4A9B6F" stroke="#357A56" stroke-width="1"/><circle cx="25" cy="24" r="5" fill="#4A9B6F" stroke="#357A56" stroke-width="1"/><circle cx="18" cy="13" r="5" fill="#6DC48A" stroke="#4A9B6F" stroke-width="1"/></svg>
+    <svg width="40" height="44" viewBox="0 0 40 44" fill="none"><ellipse cx="20" cy="30" rx="16" ry="10" fill="#F5C07A" stroke="#C8861A" stroke-width="1.2"/><ellipse cx="20" cy="25" rx="14" ry="8" fill="#F9D89A" stroke="#C8861A" stroke-width="1.2"/><ellipse cx="16" cy="24" rx="2" ry="1" fill="#C8861A" transform="rotate(-20 16 24)"/><ellipse cx="20" cy="22" rx="2" ry="1" fill="#C8861A"/><ellipse cx="24" cy="24" rx="2" ry="1" fill="#C8861A" transform="rotate(20 24 24)"/></svg>
+    <svg width="32" height="40" viewBox="0 0 32 40" fill="none"><path d="M16 5 Q21 18 19 38 Q16 42 13 38 Q11 18 16 5Z" fill="#F07030" stroke="#C05020" stroke-width="1"/><path d="M16 7 Q11 0 7 4 Q11 8 16 10Z" fill="#4A9B6F"/><path d="M16 7 Q16 0 13 1 Q14 6 16 10Z" fill="#5DB077"/><path d="M16 7 Q21 0 25 4 Q21 8 16 10Z" fill="#4A9B6F"/></svg>
+    <svg width="44" height="44" viewBox="0 0 44 44" fill="none"><circle cx="22" cy="26" r="14" fill="#E84040" stroke="#B03030" stroke-width="1.2"/><path d="M22 13 Q22 8 26 7 Q25 12 22 13Z" fill="#4A9B6F"/><path d="M22 13 Q18 7 14 9 Q18 12 22 13Z" fill="#5DB077"/><path d="M22 13 Q26 7 30 9 Q26 12 22 13Z" fill="#4A9B6F"/><ellipse cx="16" cy="22" rx="3" ry="4" fill="#F06060" opacity=".35"/></svg>
+    <svg width="40" height="44" viewBox="0 0 40 44" fill="none"><rect x="4" y="22" width="32" height="20" rx="7" fill="#F9C46A" stroke="#C8861A" stroke-width="1.2"/><rect x="2" y="19" width="36" height="7" rx="3.5" fill="#FDEDC0" stroke="#C8861A" stroke-width="1.2"/><rect x="0" y="20" width="6" height="5" rx="2.5" fill="#F5C07A" stroke="#C8861A" stroke-width="1"/><rect x="34" y="20" width="6" height="5" rx="2.5" fill="#F5C07A" stroke="#C8861A" stroke-width="1"/><path d="M14 17 Q12 11 14 7" stroke="#C8861A" stroke-width="1.2" fill="none" stroke-linecap="round"/><path d="M20 15 Q18 9 20 5" stroke="#C8861A" stroke-width="1.2" fill="none" stroke-linecap="round"/><path d="M26 17 Q24 11 26 7" stroke="#C8861A" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>
+  </div>
+  <div class="footer-quote">
+    <blockquote id="footer-q"></blockquote>
+    <p id="footer-p"></p>
+  </div>
+  <div style="position:relative;margin-top:22px;display:inline-flex;flex-direction:column;align-items:center;gap:10px">
+  <a href="mailto:hello@foodreliefsa.org.au"
+     style="display:inline-flex;align-items:center;gap:10px;background:#4A9B6F;color:#fff;text-decoration:none;border-radius:14px;padding:12px 24px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;transition:background .15s"
+     onmouseover="this.style.background='#357A56'" onmouseout="this.style.background='#4A9B6F'">
+    <span id="footer-btn"></span>
+  </a>
+  <span style="font-size:12px;color:#B0917A;letter-spacing:0.02em">hello@foodreliefsa.org.au</span>
+</div>
+</div>
+
+<script>
+const LANG={
+  zh:{
+    pill:"南澳大利亚 · 免费食物资源",
+    h1:"无论何时，<em>这里都有人</em><br>在背后支持你",
+    sub:"我们整理了南澳所有免费及低价食物资源，<br>帮你快速找到离你最近的温暖。",
+    placeholder:"输入区域名、邮编或地址，例如 5000…",
+    searchBtn:"搜索",
+    barTitle:"附近的食物资源",
+    barTitleDist:"按距离排列",
+    count:n=>`共 ${n} 个服务`,
+    chips:{all:"全部",free:"完全免费",low:"低价优惠",north:"北部",south:"南部",cbd:"市区",noAppt:"无需预约"},
+    badgeFree:"完全免费",badgeLow:"低价优惠",badgeAppt:"需预约",
+    apptNote:"⚠️ 此服务需提前预约，请先电话联系",
+    visitSite:"访问官网 →",
+    emptyTxt:"暂未找到相关服务，请尝试其他关键词。",
+    findFoodTitle:"查找更多本地服务",
+    findFoodDesc:"Foodbank 的网络覆盖南澳 700+ 家合作慈善机构。输入你的郊区或邮编，直接搜索当地所有 Foodbank 认可的食物发放点。",
+    findFoodBtn:"前往 Foodbank Find Food →",
+    findFoodNote:"（注意：该工具覆盖所有合作机构，包括教会、社区中心等本地点位）",
+    footerQ:"当你跌落时，<em>大地接住你</em>；<br>当你站起时，也请成为别人的大地。",
+    footerP:"你不是独自站在这里。此刻有人托着你——愿有一天，你也成为那双手。",
+    footerBtn:"📬 联系我们",
+    locating:"正在定位地址…",
+    locError:"无法识别该地址，请尝试郊区名或邮编",
+    distAway:"km 以外",
+    nearbyTitle:"附近服务（按距离）",
+    otherTitle:"其他服务"
+  },
+  en:{
+    pill:"South Australia · Free Food Resources",
+    h1:"Whenever you need it,<br><em>someone is here</em> standing behind you",
+    sub:"We've gathered every free and low-cost food resource across South Australia<br>to help you find the nearest support.",
+    placeholder:"Enter suburb, postcode or address, e.g. 5000…",
+    searchBtn:"Search",
+    barTitle:"Food resources near you",
+    barTitleDist:"Sorted by distance",
+    count:n=>`${n} services found`,
+    chips:{all:"All",free:"Completely free",low:"Low cost",north:"North",south:"South",cbd:"CBD",noAppt:"No appointment"},
+    badgeFree:"Free",badgeLow:"Low cost",badgeAppt:"By appointment",
+    apptNote:"⚠️ Appointment required — please call ahead",
+    visitSite:"Visit website →",
+    emptyTxt:"No services found. Try different keywords.",
+    findFoodTitle:"Find more local services",
+    findFoodDesc:"Foodbank's network covers 700+ charity partners across South Australia. Enter your suburb or postcode to search every Foodbank-approved food relief point near you.",
+    findFoodBtn:"Go to Foodbank Find Food →",
+    findFoodNote:"(This tool covers all partner agencies including local churches and community centres)",
+    footerQ:"When you stumble, <em>the ground holds you</em>;<br>when you rise, be the ground for someone else.",
+    footerP:"You are not standing here alone. Someone is carrying you right now — may you one day become those hands.",
+    footerBtn:"📬 Contact us",
+    locating:"Locating address…",
+    locError:"Could not find that location. Try a suburb name or postcode.",
+    distAway:"km away",
+    nearbyTitle:"Nearby services (by distance)",
+    otherTitle:"Other services"
+  }
+};
+
+// All individual service SITES with precise coordinates
+// isCity:true = citywide/mobile service → always shown in distance search (pinned to top of "other")
+const SITES=[
+  // OzHarvest Market
+  {sid:0,zh:{name:"OzHarvest 免费市场",desc:"新鲜蔬果、主食和熟食，按需取用，无需登记"},en:{name:"OzHarvest Free Market",desc:"Fresh produce, pantry staples & cooked meals. Take what you need, no registration"},ic:"🛒",t:"free",appt:false,addr:"27 Manton St, Hindmarsh SA 5007",zh_hrs:"周二 9am–12pm · 周三 4–7pm · 周四 9am–12pm",en_hrs:"Tue 9am–12pm · Wed 4–7pm · Thu 9am–12pm",ph:"",url:"https://www.ozharvest.org/ozharvest-market-adelaide/",areas:["cbd"],lat:-34.9165,lng:138.5738},
+
+  // Heart & Soul West (Wingfield)
+  {sid:1,zh:{name:"Heart & Soul — 西区食物市场",desc:"新鲜蔬果、面包及主食，无需Centrelink卡"},en:{name:"Heart & Soul — West Market (Wingfield)",desc:"Fresh fruit, veg & bread. No Centrelink card required"},ic:"🥦",t:"free",appt:false,addr:"30 Fourth St, Wingfield SA 5013",zh_hrs:"周一至周五 10am–2pm",en_hrs:"Mon–Fri 10am–2pm",ph:"",url:"https://www.affordablesa.com.au/categories/food",areas:["north"],lat:-34.8604,lng:138.5730},
+
+  // Heart & Soul South (Noarlunga)
+  {sid:2,zh:{name:"Heart & Soul — 南区食物市场",desc:"新鲜蔬果、面包及主食，免费取用"},en:{name:"Heart & Soul — South Market (Noarlunga)",desc:"Free fresh produce, bread and pantry staples"},ic:"🥦",t:"free",appt:false,addr:"Colonnades Shopping Centre, Noarlunga Centre SA 5168",zh_hrs:"周一至周五 10am–2pm",en_hrs:"Mon–Fri 10am–2pm",ph:"",url:"https://www.affordablesa.com.au/categories/food",areas:["south"],lat:-35.1387,lng:138.4982},
+
+  // Cos We Care — Elizabeth East
+  {sid:3,zh:{name:"Cos We Care — Elizabeth East",desc:"热餐、蔬果、乳制品、衣物，面向无家可归者及弱势群体"},en:{name:"Cos We Care — Elizabeth East",desc:"Hot & cold meals, produce, dairy, clothing for people experiencing homelessness"},ic:"🍲",t:"free",appt:false,addr:"Fremont Park, cnr Yorktown Rd & Main North Rd, Elizabeth East SA 5112",zh_hrs:"每日 7:30–9am",en_hrs:"Daily 7:30–9am",ph:"",url:"https://www.affordablesa.com.au/categories/food",areas:["north"],lat:-34.7063,lng:138.6651},
+
+  // Cos We Care — CBD
+  {sid:4,zh:{name:"Cos We Care — 市区（Hutt St）",desc:"热餐、蔬果、乳制品、衣物，面向无家可归者及弱势群体"},en:{name:"Cos We Care — CBD (Hutt St)",desc:"Hot & cold meals, produce, dairy, clothing for people experiencing homelessness"},ic:"🍲",t:"free",appt:false,addr:"cnr Hutt St & South Tce, Adelaide SA 5000",zh_hrs:"每日 7:30–9am",en_hrs:"Daily 7:30–9am",ph:"",url:"https://www.affordablesa.com.au/categories/food",areas:["cbd"],lat:-34.9296,lng:138.6093},
+
+  // Fred's Van CBD
+  {sid:5,zh:{name:"Fred's Van — Adelaide CBD",desc:"热餐、热饮、毛毯，欢迎所有人"},en:{name:"Fred's Van — Adelaide CBD",desc:"Hot meals, drinks & blankets. Everyone welcome"},ic:"🚐",t:"free",appt:false,addr:"Adelaide CBD",zh_hrs:"请查官网确认时间",en_hrs:"Check website for times",ph:"",url:"https://www.vinnies.org.au/sa/get-help/freds-van",areas:["cbd"],lat:-34.9285,lng:138.6007},
+
+  // Fred's Van Aldinga
+  {sid:6,zh:{name:"Fred's Van — Aldinga",desc:"热餐、热饮、毛毯"},en:{name:"Fred's Van — Aldinga",desc:"Hot meals, drinks & blankets"},ic:"🚐",t:"free",appt:false,addr:"Aldinga SA 5173",zh_hrs:"请查官网确认时间",en_hrs:"Check website for times",ph:"",url:"https://www.vinnies.org.au/sa/get-help/freds-van",areas:["south", "regional"],lat:-35.2742,lng:138.4683},
+
+  // Fred's Van Christie Downs
+  {sid:7,zh:{name:"Fred's Van — Christie Downs",desc:"热餐、热饮、毛毯"},en:{name:"Fred's Van — Christie Downs",desc:"Hot meals, drinks & blankets"},ic:"🚐",t:"free",appt:false,addr:"Christie Downs SA 5164",zh_hrs:"请查官网确认时间",en_hrs:"Check website for times",ph:"",url:"https://www.vinnies.org.au/sa/get-help/freds-van",areas:["south"],lat:-35.1118,lng:138.5023},
+
+  // Fred's Van Kilburn
+  {sid:8,zh:{name:"Fred's Van — Kilburn",desc:"热餐、热饮、毛毯"},en:{name:"Fred's Van — Kilburn",desc:"Hot meals, drinks & blankets"},ic:"🚐",t:"free",appt:false,addr:"Kilburn SA 5084",zh_hrs:"请查官网确认时间",en_hrs:"Check website for times",ph:"",url:"https://www.vinnies.org.au/sa/get-help/freds-van",areas:["north"],lat:-34.8776,lng:138.5873},
+
+  // Fred's Van Elizabeth
+  {sid:9,zh:{name:"Fred's Van — Elizabeth",desc:"热餐、热饮、毛毯"},en:{name:"Fred's Van — Elizabeth",desc:"Hot meals, drinks & blankets"},ic:"🚐",t:"free",appt:false,addr:"Elizabeth SA 5112",zh_hrs:"请查官网确认时间",en_hrs:"Check website for times",ph:"",url:"https://www.vinnies.org.au/sa/get-help/freds-van",areas:["north"],lat:-34.7148,lng:138.6545},
+
+  // Fred's Van Gawler
+  {sid:10,zh:{name:"Fred's Van — Gawler",desc:"热餐、热饮、毛毯"},en:{name:"Fred's Van — Gawler",desc:"Hot meals, drinks & blankets"},ic:"🚐",t:"free",appt:false,addr:"Gawler SA 5118",zh_hrs:"请查官网确认时间",en_hrs:"Check website for times",ph:"",url:"https://www.vinnies.org.au/sa/get-help/freds-van",areas:["regional"],lat:-34.5973,lng:138.7442},
+
+  // Fred's Van Semaphore
+  {sid:11,zh:{name:"Fred's Van — Semaphore",desc:"热餐、热饮、毛毯"},en:{name:"Fred's Van — Semaphore",desc:"Hot meals, drinks & blankets"},ic:"🚐",t:"free",appt:false,addr:"Semaphore SA 5019",zh_hrs:"请查官网确认时间",en_hrs:"Check website for times",ph:"",url:"https://www.vinnies.org.au/sa/get-help/freds-van",areas:["north"],lat:-34.8383,lng:138.4871},
+
+  // Fred's Van Salisbury
+  {sid:12,zh:{name:"Fred's Van — Salisbury",desc:"热餐、热饮、毛毯"},en:{name:"Fred's Van — Salisbury",desc:"Hot meals, drinks & blankets"},ic:"🚐",t:"free",appt:false,addr:"Salisbury SA 5108",zh_hrs:"请查官网确认时间",en_hrs:"Check website for times",ph:"",url:"https://www.vinnies.org.au/sa/get-help/freds-van",areas:["north"],lat:-34.7647,lng:138.6402},
+
+  // Baptist Care CBD
+  {sid:13,zh:{name:"Baptist Care 紧急食物包",desc:"非易腐食品及家居用品，每年超2,000个救济包"},en:{name:"Baptist Care Emergency Parcels",desc:"Non-perishable food & household items. Over 2,000 parcels annually"},ic:"📦",t:"free",appt:true,addr:"11–19 Millers Court, Adelaide SA 5000",zh_hrs:"周一至周四 9am–12:30pm（需预约）",en_hrs:"Mon–Thu 9am–12:30pm (appointment required)",ph:"",url:"https://baptistcaresal.org.au",areas:["cbd"],lat:-34.9243,lng:138.6001},
+
+  // ── FOODBANK FIXED HUBS (精确地址+坐标) ──
+  // Foodbank Bowden — 77 Gibson St (距Kilburn仅3.2km)
+  {sid:14,zh:{name:"Foodbank 食物站 — Bowden",desc:"通过福利机构转介，免费获得主食、肉类、蔬果及卫生用品"},en:{name:"Foodbank Food Hub — Bowden",desc:"Free pantry food, meat, produce & hygiene items via welfare agency referral"},ic:"🏦",t:"free",appt:true,addr:"77 Gibson St, Bowden SA 5007",zh_hrs:"周一至周四 9am–3pm",en_hrs:"Mon–Thu 9am–3pm",ph:"08 8351 1136",url:"https://www.foodbank.org.au/sa-nt/food-hubs/",areas:["north"],lat:-34.9038,lng:138.5742},
+
+  // Foodbank St Marys — 1167 South Rd
+  {sid:15,zh:{name:"Foodbank 食物站 — St Marys",desc:"通过福利机构转介，免费获得主食、肉类、蔬果及卫生用品"},en:{name:"Foodbank Food Hub — St Marys",desc:"Free pantry food, meat, produce & hygiene items via welfare agency referral"},ic:"🏦",t:"free",appt:true,addr:"1167 South Rd, St Marys SA 5042",zh_hrs:"请查官网确认时间",en_hrs:"Check website for times",ph:"08 8351 1136",url:"https://www.foodbank.org.au/sa-nt/food-hubs/",areas:["south"],lat:-35.0060,lng:138.5610},
+
+  // Foodbank Davoren Park
+  {sid:16,zh:{name:"Foodbank 食物站 — Davoren Park",desc:"通过福利机构转介，免费获得主食、肉类、蔬果及卫生用品"},en:{name:"Foodbank Food Hub — Davoren Park",desc:"Free pantry food, meat, produce & hygiene items via welfare agency referral"},ic:"🏦",t:"free",appt:true,addr:"Davoren Park SA 5113",zh_hrs:"请查官网确认时间",en_hrs:"Check website for times",ph:"08 8351 1136",url:"https://www.foodbank.org.au/sa-nt/food-hubs/",areas:["north"],lat:-34.6915,lng:138.6560},
+
+  // Foodbank Woodville
+  {sid:17,zh:{name:"Foodbank 食物站 — Woodville",desc:"通过福利机构转介，免费获得主食、肉类、蔬果及卫生用品"},en:{name:"Foodbank Food Hub — Woodville",desc:"Free pantry food, meat, produce & hygiene items via welfare agency referral"},ic:"🏦",t:"free",appt:true,addr:"Woodville SA 5011",zh_hrs:"请查官网确认时间",en_hrs:"Check website for times",ph:"08 8351 1136",url:"https://www.foodbank.org.au/sa-nt/food-hubs/",areas:["north"],lat:-34.8820,lng:138.5390},
+
+  // Foodbank Christies Beach — 59-61 Beach Rd
+  {sid:18,zh:{name:"Foodbank 食物站 — Christies Beach",desc:"通过福利机构转介，免费获得主食、肉类、蔬果及卫生用品"},en:{name:"Foodbank Food Hub — Christies Beach",desc:"Free pantry food, meat, produce & hygiene items via welfare agency referral"},ic:"🏦",t:"free",appt:true,addr:"59–61 Beach Rd, Christies Beach SA 5165",zh_hrs:"周一至周五 9am–4pm",en_hrs:"Mon–Fri 9am–4pm",ph:"08 8351 1136",url:"https://www.foodbank.org.au/sa-nt/food-hubs/",areas:["south"],lat:-35.1355,lng:138.4761},
+
+  // Foodbank Elizabeth — 91-93 Elizabeth Way
+  {sid:19,zh:{name:"Foodbank 食物站 — Elizabeth",desc:"通过福利机构转介，免费获得主食、肉类、蔬果及卫生用品"},en:{name:"Foodbank Food Hub — Elizabeth",desc:"Free pantry food, meat, produce & hygiene items via welfare agency referral"},ic:"🏦",t:"free",appt:true,addr:"91–93 Elizabeth Way, Elizabeth SA 5112",zh_hrs:"周一至周五 9:30am–2:30pm",en_hrs:"Mon–Fri 9:30am–2:30pm",ph:"08 8351 1136",url:"https://www.foodbank.org.au/sa-nt/food-hubs/",areas:["north"],lat:-34.7171,lng:138.6622},
+
+  // Foodbank Mt Gambier
+  {sid:20,zh:{name:"Foodbank 食物站 — Mt Gambier",desc:"通过福利机构转介，免费获得主食、肉类、蔬果及卫生用品"},en:{name:"Foodbank Food Hub — Mount Gambier",desc:"Free pantry food, meat, produce & hygiene items via welfare agency referral"},ic:"🏦",t:"free",appt:true,addr:"Mount Gambier SA 5290",zh_hrs:"请查官网确认时间",en_hrs:"Check website for times",ph:"08 8351 1136",url:"https://www.foodbank.org.au/sa-nt/food-hubs/",areas:["regional"],lat:-37.8310,lng:140.7800},
+
+  // Foodbank Murray Bridge
+  {sid:21,zh:{name:"Foodbank 食物站 — Murray Bridge",desc:"通过福利机构转介，免费获得主食、肉类、蔬果及卫生用品"},en:{name:"Foodbank Food Hub — Murray Bridge",desc:"Free pantry food, meat, produce & hygiene items via welfare agency referral"},ic:"🏦",t:"free",appt:true,addr:"Murray Bridge SA 5253",zh_hrs:"请查官网确认时间",en_hrs:"Check website for times",ph:"08 8351 1136",url:"https://www.foodbank.org.au/sa-nt/food-hubs/",areas:["regional"],lat:-35.1200,lng:139.2730},
+
+  // Foodbank Whyalla
+  {sid:22,zh:{name:"Foodbank 食物站 — Whyalla",desc:"通过福利机构转介，免费获得主食、肉类、蔬果及卫生用品"},en:{name:"Foodbank Food Hub — Whyalla",desc:"Free pantry food, meat, produce & hygiene items via welfare agency referral"},ic:"🏦",t:"free",appt:true,addr:"Whyalla SA 5600",zh_hrs:"请查官网确认时间",en_hrs:"Check website for times",ph:"08 8351 1136",url:"https://www.foodbank.org.au/sa-nt/food-hubs/",areas:["regional"],lat:-33.0350,lng:137.5770},
+
+  // ── RAA MOBILE FOOD HUBS (流动站) ──
+  {sid:23,zh:{name:"RAA Foodbank 流动食物车 — Beulah Park",desc:"流动食物车，免费蔬果面包+低价食品，需福利机构转介"},en:{name:"RAA Foodbank Mobile Hub — Beulah Park",desc:"Mobile grocery store with free bread, fruit & veg plus low-cost food. Referral required"},ic:"🚛",t:"free",appt:true,addr:"Beulah Park SA 5067",zh_hrs:"定期到访，查官网日历",en_hrs:"Rotating schedule — check website calendar",ph:"",url:"https://www.foodbank.org.au/sa-nt/metromobilehubcalendar/",areas:["north"],lat:-34.9255,lng:138.6441},
+
+  {sid:24,zh:{name:"RAA Foodbank 流动食物车 — Modbury",desc:"流动食物车，免费蔬果面包+低价食品，需福利机构转介"},en:{name:"RAA Foodbank Mobile Hub — Modbury",desc:"Mobile grocery store with free bread, fruit & veg plus low-cost food. Referral required"},ic:"🚛",t:"free",appt:true,addr:"Modbury SA 5092",zh_hrs:"定期到访，查官网日历",en_hrs:"Rotating schedule — check website calendar",ph:"",url:"https://www.foodbank.org.au/sa-nt/metromobilehubcalendar/",areas:["north"],lat:-34.8388,lng:138.6880},
+
+  {sid:25,zh:{name:"RAA Foodbank 流动食物车 — Paradise",desc:"流动食物车，免费蔬果面包+低价食品，需福利机构转介"},en:{name:"RAA Foodbank Mobile Hub — Paradise",desc:"Mobile grocery store with free bread, fruit & veg plus low-cost food. Referral required"},ic:"🚛",t:"free",appt:true,addr:"Paradise SA 5075",zh_hrs:"定期到访，查官网日历",en_hrs:"Rotating schedule — check website calendar",ph:"",url:"https://www.foodbank.org.au/sa-nt/metromobilehubcalendar/",areas:["north"],lat:-34.8833,lng:138.6897},
+
+  {sid:26,zh:{name:"RAA Foodbank 流动食物车 — Seaford",desc:"流动食物车，免费蔬果面包+低价食品，需福利机构转介"},en:{name:"RAA Foodbank Mobile Hub — Seaford",desc:"Mobile grocery store with free bread, fruit & veg plus low-cost food. Referral required"},ic:"🚛",t:"free",appt:true,addr:"Seaford SA 5169",zh_hrs:"定期到访，查官网日历",en_hrs:"Rotating schedule — check website calendar",ph:"",url:"https://www.foodbank.org.au/sa-nt/metromobilehubcalendar/",areas:["south"],lat:-35.1760,lng:138.4954},
+
+  {sid:27,zh:{name:"RAA Foodbank 流动食物车 — Aberfoyle Park",desc:"流动食物车，免费蔬果面包+低价食品，需福利机构转介"},en:{name:"RAA Foodbank Mobile Hub — Aberfoyle Park",desc:"Mobile grocery store with free bread, fruit & veg plus low-cost food. Referral required"},ic:"🚛",t:"free",appt:true,addr:"Aberfoyle Park SA 5159",zh_hrs:"定期到访，查官网日历",en_hrs:"Rotating schedule — check website calendar",ph:"",url:"https://www.foodbank.org.au/sa-nt/metromobilehubcalendar/",areas:["south"],lat:-35.0654,lng:138.5555},
+
+  {sid:28,zh:{name:"RAA Foodbank 流动食物车 — Mt Barker",desc:"流动食物车，免费蔬果面包+低价食品，需福利机构转介"},en:{name:"RAA Foodbank Mobile Hub — Mount Barker",desc:"Mobile grocery store with free bread, fruit & veg plus low-cost food. Referral required"},ic:"🚛",t:"free",appt:true,addr:"Mount Barker SA 5251",zh_hrs:"定期到访，查官网日历",en_hrs:"Rotating schedule — check website calendar",ph:"",url:"https://www.foodbank.org.au/sa-nt/metromobilehubcalendar/",areas:["regional"],lat:-35.0685,lng:138.8617},
+
+  // The Pantry Life FM
+  {sid:29,zh:{name:"The Pantry（Life FM）",desc:"免费食品救济，带可重复使用袋子前来取用"},en:{name:"The Pantry — Life FM",desc:"Free grocery relief. Bring a reusable bag"},ic:"🧺",t:"free",appt:false,addr:"245 Angas Street, Adelaide SA 5000",zh_hrs:"每月定期 2–3pm（查官网确认日期）",en_hrs:"Monthly, 2–3pm — check website for dates",ph:"08 8444 5444",url:"https://mylifefm.com/events/the-pantry-food-relief/",areas:["cbd"],lat:-34.9290,lng:138.6070},
+
+  // Soup Kitchen Hurtle Square
+  {sid:30,zh:{name:"流浪者汤厨 — Hurtle Square",desc:"5月至10月每晚为无家可归者提供免费热汤"},en:{name:"Soup Kitchen — Hurtle Square",desc:"Free hot soup for people experiencing homelessness, May–October"},ic:"🍜",t:"free",appt:false,addr:"Hurtle Square, Adelaide SA 5000",zh_hrs:"5月–10月 每日 6:30pm（周六除外）",en_hrs:"May–Oct daily 6:30pm (except Saturday)",ph:"",url:"https://www.affordablesa.com.au/categories/food",areas:["cbd"],lat:-34.9276,lng:138.6092},
+
+  // Soup Kitchen Whitmore Square
+  {sid:31,zh:{name:"流浪者汤厨 — Whitmore Square",desc:"5月至10月每晚为无家可归者提供免费热汤"},en:{name:"Soup Kitchen — Whitmore Square",desc:"Free hot soup for people experiencing homelessness, May–October"},ic:"🍜",t:"free",appt:false,addr:"Whitmore Square, Adelaide SA 5000",zh_hrs:"5月–10月 每日 7:00pm（周六除外）",en_hrs:"May–Oct daily 7:00pm (except Saturday)",ph:"",url:"https://www.affordablesa.com.au/categories/food",areas:["cbd"],lat:-34.9310,lng:138.5950},
+
+  // Anglicare Christies Beach
+  {sid:32,zh:{name:"Anglicare SA — Christies Beach",desc:"低价或免费食品，部分地点提供Foodbank代金券"},en:{name:"Anglicare SA — Christies Beach",desc:"Low-cost or free food & groceries. Some locations offer Foodbank vouchers"},ic:"🏪",t:"low",appt:true,addr:"111 Beach Rd, Christies Beach SA 5165",zh_hrs:"周一至周五 9:30–11:30am",en_hrs:"Mon–Fri 9:30–11:30am",ph:"1800 748 149",url:"https://www.anglicaresa.org.au",areas:["south"],lat:-35.1360,lng:138.4762},
+
+  // Salvation Army Morphett Vale
+  {sid:33,zh:{name:"救世军 — Morphett Vale",desc:"紧急食物包及社区支援"},en:{name:"Salvation Army — Morphett Vale",desc:"Emergency food parcels and community support"},ic:"⛑️",t:"free",appt:false,addr:"186 Elizabeth Rd, Morphett Vale SA 5162",zh_hrs:"周一至周五 9am–12pm",en_hrs:"Mon–Fri 9am–12pm",ph:"08 8348 6014",url:"https://www.salvationarmy.org.au",areas:["south"],lat:-35.0870,lng:138.5190},
+
+  // Salvation Army CBD
+  {sid:34,zh:{name:"救世军 — Adelaide 市区",desc:"紧急食物救济及社区支援"},en:{name:"Salvation Army — Adelaide CBD",desc:"Emergency food relief and community support"},ic:"⛑️",t:"free",appt:false,addr:"277 Pirie St, Adelaide SA 5000",zh_hrs:"请电话确认",en_hrs:"Please call to confirm hours",ph:"",url:"https://www.salvationarmy.org.au/locations/south-australia/s099/adelaide-community-support-services/",areas:["cbd"],lat:-34.9240,lng:138.6040},
+
+  // Too Good To Go — citywide
+  {sid:35,isCity:true,zh:{name:"Too Good To Go（App）",desc:"以1/3原价购买商家剩余食品，下载App搜索附近商家，全Adelaide均有"},en:{name:"Too Good To Go (App)",desc:"Buy surplus food from local bakeries & cafes at 1/3 price. Available across all of Adelaide"},ic:"📱",t:"low",appt:false,addr:"全 Adelaide 餐厅、面包店",zh_hrs:"每日，按商户营业时间",en_hrs:"Daily, per merchant hours",ph:"",url:"https://www.toogoodtogo.com/en-au",areas:["cbd", "north", "south"],lat:-34.9285,lng:138.6007},
+
+  // Heart & Soul Delivery — citywide
+  {sid:36,isCity:true,zh:{name:"Heart & Soul — 免费食物包送货",desc:"免费食物包配送上门（全Adelaide），需提前网上下单"},en:{name:"Heart & Soul — Free Home Delivery",desc:"Free food hampers delivered anywhere in Adelaide. Order online by midday the day before"},ic:"🚚",t:"free",appt:true,addr:"送货覆盖全 Adelaide 及 Hills",zh_hrs:"每周一次，按区域配送",en_hrs:"Weekly delivery, schedule varies by area",ph:"",url:"https://www.affordablesa.com.au/categories/food",areas:["north", "south", "regional"],lat:-34.9285,lng:138.6007},
+
+  // Church of Christ Blair Athol — Foodbank合作机构
+  {sid:38,zh:{name:"布莱尔阿索教会 — 紧急食物救济",desc:"紧急食物包，提供给有需要的家庭和个人，周一设有免费早午餐"},en:{name:"Church of Christ Blair Athol — Emergency Food",desc:"Emergency food parcels for individuals & families. Monday drop-in with free morning tea & lunch"},ic:"⛪",t:"free",appt:true,addr:"379 Prospect Rd, Blair Athol SA 5084",zh_hrs:"请电话确认（建议先致电）",en_hrs:"Please call ahead to confirm hours",ph:"08 8548 9265",url:"https://www.churchesofchrist-sa.org.au",areas:["north"],lat:-34.8693,lng:138.5893},
+
+  // Lutheran Care Blair Athol — Foodbank合作机构
+  {sid:39,zh:{name:"Lutheran Care — 布莱尔阿索",desc:"紧急救济服务，提供食物包、理财辅导及社区支援"},en:{name:"Lutheran Care — Blair Athol",desc:"Emergency relief including food parcels, financial counselling and community support"},ic:"🏛️",t:"free",appt:true,addr:"309 Prospect Rd, Blair Athol SA 5084",zh_hrs:"周一至周五（请电话确认时间）",en_hrs:"Mon–Fri (please call to confirm hours)",ph:"08 8269 9300",url:"https://www.lutherancare.org.au/emergency-relief",areas:["north"],lat:-34.8718,lng:138.5891},
+
+  // ══ ANGLICARE SA — all confirmed sites ══
+  // Anglicare SA Magdalene Centre (CBD) — was completely missing
+  {sid:40,zh:{name:"Anglicare SA — 市区（Magdalene Centre）",desc:"紧急救济：食物、药品代金券、毯子等。步入式服务，无需预约"},en:{name:"Anglicare SA — Adelaide CBD (Magdalene Centre)",desc:"Emergency food, pharmacy vouchers, blankets & referrals. Walk-in service welcome"},ic:"🏛️",t:"free",appt:false,addr:"82 Gilbert St, Adelaide SA 5000",zh_hrs:"周一至周五 9am–11:30am",en_hrs:"Mon–Fri 9am–11:30am",ph:"08 8305 9434",url:"https://anglicaresa.com.au/support/emergency-assistance/the-magdalene-centre/",areas:['cbd'],lat:-34.9318,lng:138.5972},
+
+  // Anglicare SA Elizabeth / The Mission — was missing
+  {sid:41,zh:{name:"Anglicare SA — Elizabeth（The Mission）",desc:"紧急救济：食物、衣物、药品代金券。另有免费餐厅及食物知识班"},en:{name:"Anglicare SA — Elizabeth (The Mission)",desc:"Emergency food, clothing & pharmacy vouchers. Also free café & Food Barn cooking classes"},ic:"🏛️",t:"free",appt:true,addr:"Playford Blvd (Clock Tower), Elizabeth SA 5112",zh_hrs:"周一至周五 9am–12pm（电话 1800 061 551，9am起接听）",en_hrs:"Mon–Fri 9am–12pm (call 1800 061 551 from 9am)",ph:"1800 061 551",url:"https://anglicaresa.com.au/support/emergency-assistance/elizabeth-the-mission/",areas:['north'],lat:-34.7172,lng:138.6531},
+
+  // Anglicare SA Woodville — confirmed in official listing, address TBC
+  {sid:42,zh:{name:"Anglicare SA — Woodville",desc:"紧急救济：食物、药品代金券、毯子等，需提前电话预约"},en:{name:"Anglicare SA — Woodville",desc:"Emergency food, pharmacy vouchers & blankets. Appointment required"},ic:"🏛️",t:"free",appt:true,addr:"Woodville SA 5011",zh_hrs:"周一至周五 9am–12pm（请致电确认）",en_hrs:"Mon–Fri 9am–12pm (call to confirm)",ph:"1800 748 149",url:"https://anglicaresa.com.au/services/community/emergency-assistance/",areas:['north'],lat:-34.8820,lng:138.5400},
+
+  // Anglicare SA Wallaroo — regional
+  {sid:43,zh:{name:"Anglicare SA — Wallaroo（约克半岛）",desc:"紧急救济，步入式服务，无需预约"},en:{name:"Anglicare SA — Wallaroo (Yorke Peninsula)",desc:"Emergency food relief. Walk-in service, no appointment needed"},ic:"🏛️",t:"free",appt:false,addr:"cnr Hughes St & Church St, Wallaroo SA 5556",zh_hrs:"周三、周五 10am–12pm（步入式）",en_hrs:"Wed & Fri 10am–12pm (walk-in)",ph:"0417 158 392",url:"https://anglicaresa.com.au/services/community/emergency-assistance/",areas:['regional'],lat:-33.9320,lng:137.9143},
+
+  // ══ SALVATION ARMY — all confirmed SA sites with food relief ══
+  // Tea Tree Gully (Modbury) — was missing
+  {sid:44,zh:{name:"救世军 — Tea Tree Gully（Modbury）",desc:"紧急救济（需预约）、社区咖啡馆、OzHarvest食物每周三和周五"},en:{name:"Salvation Army — Tea Tree Gully (Modbury)",desc:"Emergency relief by appointment. Community café Mon–Fri. OzHarvest food Wed & Fri"},ic:"⛑️",t:"free",appt:true,addr:"138–142 Reservoir Rd, Modbury SA 5092",zh_hrs:"紧急救济：周一至周五 9:30am–1pm（需预约，08 8360 6444）",en_hrs:"Emergency relief Mon–Fri 9:30am–1pm (appt, call 08 8360 6444)",ph:"08 8360 6444",url:"https://www.salvationarmy.org.au/locations/south-australia/s062/tea-tree-gully-corps/",areas:['north'],lat:-34.8385,lng:138.6884},
+
+  // Salvation Army Gawler — confirmed food relief
+  {sid:45,zh:{name:"救世军 — Gawler",desc:"紧急救济：周二、周四 9am–2:30pm；社区咖啡馆：周一至周五"},en:{name:"Salvation Army — Gawler",desc:"Emergency relief Tue & Thu 9am–2:30pm. Community café Mon–Fri"},ic:"⛑️",t:"free",appt:false,addr:"17 Edith St, Gawler East SA 5118",zh_hrs:"紧急救济：周二、周四 9am–2:30pm",en_hrs:"Emergency relief: Tue & Thu 9am–2:30pm",ph:"08 8523 4844",url:"https://www.salvationarmy.org.au/locations/south-australia/s109/gawler-corps-riverside-/",areas:['regional'],lat:-34.5960,lng:138.7462},
+
+  // Salvation Army Marion (Seacombe Gardens)
+  {sid:46,zh:{name:"救世军 — Marion（Seacombe Gardens）",desc:"紧急救济，周一至周五 9am–3pm，无需预约"},en:{name:"Salvation Army — Marion (Seacombe Gardens)",desc:"Emergency relief Mon–Fri 9am–3pm, no appointment needed"},ic:"⛑️",t:"free",appt:false,addr:"155 Sturt Rd, Seacombe Gardens SA 5047",zh_hrs:"周一至周五 9am–3pm",en_hrs:"Mon–Fri 9am–3pm",ph:"08 8377 0001",url:"https://www.salvationarmy.org.au",areas:['south'],lat:-35.0257,lng:138.5447},
+
+  // Salvation Army Ingle Farm
+  {sid:47,zh:{name:"救世军 — Ingle Farm",desc:"紧急救济、青少年住房支援及社区服务"},en:{name:"Salvation Army — Ingle Farm",desc:"Emergency relief, youth housing support and community services"},ic:"⛑️",t:"free",appt:false,addr:"120–124 Maxwell Rd, Ingle Farm SA 5098",zh_hrs:"周一至周五 9am–5pm",en_hrs:"Mon–Fri 9am–5pm",ph:"08 8397 9333",url:"https://www.salvationarmy.org.au/inglefarm/",areas:['north'],lat:-34.8138,lng:138.6468},
+
+  // Salvation Army Victor Harbor — confirmed free food Fri
+  {sid:48,zh:{name:"救世军 — Victor Harbor",desc:"免费食物派发及社区早午餐，每周五 9:30am–12pm"},en:{name:"Salvation Army — Victor Harbor",desc:"Free food & community brunch every Friday 9:30am–12pm"},ic:"⛑️",t:"free",appt:false,addr:"22 Bartel Blvd, Encounter Bay SA 5211",zh_hrs:"每周五 9:30am–12pm（免费食物）",en_hrs:"Every Friday 9:30am–12pm (free food)",ph:"",url:"https://www.salvationarmy.org.au",areas:['regional'],lat:-35.5646,lng:138.6224},
+
+  // ══ UNITINGSA / UNITING COMMUNITIES ══
+  // UnitingSA Port Adelaide — confirmed emergency food
+  {sid:49,zh:{name:"UnitingSA — Port Adelaide",desc:"紧急救济：食物包、衣物、卫生用品、电话代金券。需持Centrelink卡"},en:{name:"UnitingSA — Port Adelaide",desc:"Emergency food parcels, clothing, hygiene & phone vouchers. Centrelink card required"},ic:"🤝",t:"free",appt:true,addr:"58 Dale St, Port Adelaide SA 5015",zh_hrs:"周一至周五 9am–1pm",en_hrs:"Mon–Fri 9am–1pm",ph:"08 8440 2299",url:"https://unitingsa.com.au/community-services/emergency-assistance/",areas:['north'],lat:-34.8390,lng:138.4989},
+
+  // Uniting Communities Christies Beach — 107 Dyson Rd
+  {sid:50,zh:{name:"Uniting Communities — Christies Beach",desc:"紧急救济，电话预约，周一至周五 9am–1pm"},en:{name:"Uniting Communities — Christies Beach",desc:"Emergency assistance by phone assessment, Mon–Fri 9am–1pm"},ic:"🤝",t:"free",appt:true,addr:"107 Dyson Rd, Christies Beach SA 5165",zh_hrs:"周一至周五 9am–1pm（先电话预约）",en_hrs:"Mon–Fri 9am–1pm (phone assessment first)",ph:"08 8202 5846",url:"https://www.unitingcommunities.org/",areas:['south'],lat:-35.1310,lng:138.4793},
+
+  // Noarlunga Uniting Church — confirmed Foodbank partner, walk-in
+  {sid:51,zh:{name:"Noarlunga Uniting Church — 食物救济",desc:"免费食物，步入式服务，无需预约。周一至周六 9–11am"},en:{name:"Noarlunga Uniting Church — Food Relief",desc:"Free food, walk-in service, no appointment. Mon–Sat 9–11am. Foodbank partner"},ic:"⛪",t:"free",appt:false,addr:"23 William Rd, Christies Beach SA 5165",zh_hrs:"周一至周六 9–11am（步入式，无需预约）",en_hrs:"Mon–Sat 9–11am (walk-in, no appointment)",ph:"08 8384 3868",url:"https://noarlunga.ucasa.org.au/food-relief/",areas:['south'],lat:-35.1318,lng:138.4810},
+
+  // ══ MarionLIFE — important south/southwest hub ══
+  {sid:52,zh:{name:"MarionLIFE 社区服务",desc:"食物及食品代金券、日用品、毯子、衣物救济，步入式，无需预约"},en:{name:"MarionLIFE Community Services",desc:"Food & food vouchers, toiletries, blankets & clothing. Walk-in, no appointment needed"},ic:"💚",t:"free",appt:false,addr:"887 Marion Rd, Mitchell Park SA 5043",zh_hrs:"周一至周四 9am–12pm（步入式，无需预约）",en_hrs:"Mon–Thu 9am–12pm (walk-in, no appointment)",ph:"08 8277 0304",url:"https://marionlife.org.au/",areas:['south'],lat:-35.0113,lng:138.5574},
+
+  // ══ AnglicareSA Elizabeth — Food Barn (free meals separate service) ══
+  {sid:53,zh:{name:"Anglicare SA — Elizabeth 免费午餐（Food Barn）",desc:"免费餐食，周一至周五 10:30am–1pm，无需预约"},en:{name:"Anglicare SA Elizabeth — Free Lunch (Food Barn)",desc:"Free meals Mon–Fri 10:30am–1pm. No appointment needed. Open to all"},ic:"🍽️",t:"free",appt:false,addr:"Playford Blvd (Clock Tower), Elizabeth SA 5112",zh_hrs:"周一至周五 10:30am–1pm",en_hrs:"Mon–Fri 10:30am–1pm",ph:"1800 061 551",url:"https://anglicaresa.com.au/support/emergency-assistance/elizabeth-the-mission/",areas:['north'],lat:-34.7172,lng:138.6531},
+
+  // Grow Free — citywide
+  {sid:37,isCity:true,zh:{name:"Grow Free 社区共享推车",desc:"免费蔬菜、草药、种苗，24/7随时取用，Adelaide各处均有共享推车"},en:{name:"Grow Free — Community Sharing Carts",desc:"Free vegetables, herbs & seedlings on sharing carts across Adelaide. 24/7"},ic:"🌱",t:"free",appt:false,addr:"Adelaide 各处（见 Facebook 地图）",zh_hrs:"24/7 随时可取",en_hrs:"24/7 anytime",ph:"",url:"https://www.facebook.com/GrowFreeAustralia",areas:["north", "south", "cbd"],lat:-34.9285,lng:138.6007}
+];
+
+// SA postcode → approximate [lat, lng]
+const POSTCODES={
+  "5000":[-34.9285,138.6007],"5001":[-34.9285,138.6007],"5005":[-34.9200,138.6050],
+  "5006":[-34.9050,138.5900],"5007":[-34.9165,138.5738],"5008":[-34.8980,138.5780],
+  "5009":[-34.9050,138.5580],"5010":[-34.8870,138.5600],"5011":[-34.8820,138.5390],
+  "5012":[-34.8780,138.5580],"5013":[-34.8620,138.5720],"5014":[-34.8620,138.5250],
+  "5015":[-34.8570,138.5080],"5016":[-34.8520,138.5000],"5017":[-34.8350,138.5000],
+  "5018":[-34.8310,138.4970],"5019":[-34.8380,138.4870],"5020":[-34.8880,138.5150],
+  "5021":[-34.8980,138.5280],"5022":[-34.9150,138.5170],"5023":[-34.8980,138.5500],
+  "5024":[-34.8900,138.5350],"5025":[-34.9000,138.5450],"5031":[-34.9280,138.5670],
+  "5032":[-34.9320,138.5520],"5033":[-34.9400,138.5560],"5034":[-34.9550,138.5830],
+  "5035":[-34.9480,138.5700],"5037":[-34.9540,138.5540],"5038":[-34.9780,138.5680],
+  "5039":[-34.9900,138.5870],"5040":[-35.0050,138.5860],"5041":[-34.9870,138.5980],
+  "5042":[-35.0060,138.5760],"5043":[-35.0140,138.5880],"5044":[-34.9750,138.5170],
+  "5045":[-34.9700,138.5100],"5046":[-34.9640,138.5260],"5047":[-34.9880,138.5350],
+  "5048":[-35.0220,138.5170],"5049":[-35.0400,138.5120],"5050":[-34.9980,138.5600],
+  "5051":[-35.0100,138.5650],"5052":[-35.0210,138.5800],"5061":[-34.9480,138.6130],
+  "5062":[-34.9540,138.6200],"5063":[-34.9450,138.6270],"5064":[-34.9540,138.6350],
+  "5065":[-34.9400,138.6430],"5066":[-34.9270,138.6620],"5067":[-34.9260,138.6250],
+  "5068":[-34.9170,138.6400],"5069":[-34.9120,138.6290],"5070":[-34.9060,138.6480],
+  "5071":[-34.9280,138.6120],"5072":[-34.9100,138.6600],"5073":[-34.9150,138.6700],
+  "5074":[-34.9060,138.6680],"5075":[-34.8950,138.6730],"5076":[-34.8870,138.6650],
+  "5081":[-34.8960,138.6060],"5082":[-34.8900,138.6130],"5083":[-34.8820,138.6130],
+  "5084":[-34.8780,138.5870],"5085":[-34.8680,138.5990],"5086":[-34.8620,138.6130],
+  "5087":[-34.8570,138.6300],"5088":[-34.8450,138.6380],"5089":[-34.8400,138.6550],
+  "5090":[-34.8350,138.6700],"5091":[-34.8700,138.6480],"5092":[-34.8750,138.6350],
+  "5093":[-34.8640,138.6200],"5094":[-34.8700,138.5700],"5095":[-34.8560,138.5740],
+  "5096":[-34.8480,138.5880],"5097":[-34.8390,138.6050],"5098":[-34.8250,138.6060],
+  "5106":[-34.8060,138.6230],"5107":[-34.7920,138.6320],"5108":[-34.7650,138.6400],
+  "5109":[-34.7780,138.6190],"5110":[-34.7530,138.6220],"5111":[-34.7240,138.6430],
+  "5112":[-34.7150,138.6550],"5113":[-34.6910,138.6560],"5114":[-34.7050,138.6890],
+  "5115":[-34.6720,138.6410],"5116":[-34.6580,138.6830],"5117":[-34.6370,138.7120],
+  "5118":[-34.5970,138.7440],"5119":[-34.5680,138.7520],"5120":[-34.6200,138.6700],
+  "5121":[-34.5600,138.7250],"5125":[-34.8000,138.7230],"5126":[-34.7820,138.7050],
+  "5127":[-34.7680,138.7110],"5162":[-35.0870,138.5190],"5163":[-35.1020,138.5120],
+  "5164":[-35.1090,138.5000],"5165":[-35.1380,138.4760],"5166":[-35.1250,138.4700],
+  "5167":[-35.1180,138.4620],"5168":[-35.1390,138.4990],"5169":[-35.1540,138.5010],
+  "5170":[-35.1700,138.5020],"5171":[-35.1900,138.4820],"5172":[-35.2100,138.4930],
+  "5173":[-35.2740,138.4680],"5174":[-35.2640,138.5150],"5253":[-35.1200,139.2730],
+  "5290":[-37.8310,140.7800],"5600":[-33.0350,137.5770]
+};
+
+// Suburb name → postcode for quick lookup
+const SUBURBS={
+  "adelaide":"5000","hindmarsh":"5007","wingfield":"5013","woodville":"5011",
+  "kilburn":"5084","semaphore":"5019","elizabeth":"5112","elizabeth east":"5112",
+  "salisbury":"5108","davoren park":"5113","gawler":"5118","port adelaide":"5015",
+  "norwood":"5067","unley":"5061","glenelg":"5045","henley beach":"5022",
+  "prospect":"5082","mitcham":"5062","burnside":"5066","campbelltown":"5074",
+  "tea tree gully":"5091","modbury":"5092","golden grove":"5125","mawson lakes":"5095",
+  "para hills":"5096","para vista":"5093","green acres":"5086","holden hill":"5088",
+  "valley view":"5093","northgate":"5085","enfield":"5085","lightsview":"5085",
+  "brahma lodge":"5109","salisbury downs":"5108","salisbury north":"5108",
+  "paralowie":"5108","dry creek":"5094","gepps cross":"5094","pooraka":"5095",
+  "christies beach":"5165","noarlunga":"5168","morphett vale":"5162",
+  "reynella":"5161","old noarlunga":"5168","hackham":"5163","happy valley":"5159",
+  "onkaparinga hills":"5163","aberfoyle park":"5159","flagstaff hill":"5159",
+  "bedford park":"5042","pasadena":"5042","bellevue heights":"5050",
+  "st marys":"5042","colonel light gardens":"5041","eden hills":"5050",
+  "blackwood":"5051","belair":"5052","hawthorndene":"5051","coromandel valley":"5051",
+  "aldinga":"5173","aldinga beach":"5173","port willunga":"5173",
+  "whyalla":"5600","murray bridge":"5253","mount gambier":"5290","mt gambier":"5290"
+};
+
+let L='zh', af='all', searchLat=null, searchLng=null, searchMode=false;
+
+function detectLang(){
+  const nav=navigator.language||navigator.userLanguage||'zh';
+  return nav.toLowerCase().startsWith('zh')?'zh':'en';
+}
+function t(k){return LANG[L][k]}
+function td(s,k){return(s[L]||s.zh||{})[k]||(s.zh||{})[k]||''}
+function hrs(s){return L==='en'?s.en_hrs:s.zh_hrs}
+
+function applyLang(){
+  document.documentElement.lang=L==='zh'?'zh-CN':'en';
+  document.getElementById('hero-pill').textContent=t('pill');
+  document.getElementById('hero-h1').innerHTML=t('h1');
+  document.getElementById('hero-sub').innerHTML=t('sub');
+  document.getElementById('srch').placeholder=t('placeholder');
+  document.getElementById('search-btn').textContent=t('searchBtn');
+  document.getElementById('bar-title').textContent=searchMode?t('barTitleDist'):t('barTitle');
+  document.getElementById('footer-btn').textContent=t('footerBtn');
+  document.getElementById('empty-txt').textContent=t('emptyTxt');
+  document.getElementById('footer-q').innerHTML=t('footerQ');
+  document.getElementById('footer-p').textContent=t('footerP');
+  document.getElementById('lang-btn').textContent=L==='zh'?'EN':'中文';
+  document.querySelectorAll('.tl[data-k]').forEach(el=>{
+    el.textContent=(t('chips')||{})[el.dataset.k]||'';
+  });
+}
+
+function toggleLang(){L=L==='zh'?'en':'zh';applyLang();render();}
+function setF(el){
+  af=el.dataset.f;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+  searchMode=false;searchLat=null;searchLng=null;
+  document.getElementById('srch').value='';
+  document.getElementById('suggest').style.display='none';
+  document.getElementById('search-status').textContent='';
+  document.getElementById('bar-title').textContent=t('barTitle');
+  render();
+}
+
+// Haversine distance in km
+function haversine(lat1,lng1,lat2,lng2){
+  const R=6371,dLat=(lat2-lat1)*Math.PI/180,dLng=(lng2-lng1)*Math.PI/180;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+function fmtDist(km){
+  if(km<1)return Math.round(km*1000)+'m';
+  return km.toFixed(1)+'km';
+}
+
+// Geocode: try postcode map, suburb map, then Nominatim API
+async function geocode(query){
+  const q=query.trim().toLowerCase();
+  // Exact postcode
+  if(/^\d{4}$/.test(q.trim())&&POSTCODES[q.trim()])return POSTCODES[q.trim()];
+  // Suburb name
+  for(const[k,pc]of Object.entries(SUBURBS)){
+    if(q.includes(k)&&POSTCODES[pc])return POSTCODES[pc];
+  }
+  // Postcode in query string
+  const pcMatch=q.match(/\b(5\d{3})\b/);
+  if(pcMatch&&POSTCODES[pcMatch[1]])return POSTCODES[pcMatch[1]];
+  // Nominatim fallback
+  try{
+    const url=`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query+', South Australia, Australia')}&format=json&limit=1`;
+    const res=await fetch(url,{headers:{'Accept-Language':L==='zh'?'zh-CN,zh':'en-AU,en'}});
+    const data=await res.json();
+    if(data&&data[0])return[parseFloat(data[0].lat),parseFloat(data[0].lon)];
+  }catch(e){}
+  return null;
+}
+
+let searchTimer=null;
+async function doSearch(){
+  const q=document.getElementById('srch').value.trim();
+  if(!q){searchMode=false;searchLat=null;searchLng=null;render();return;}
+  const status=document.getElementById('search-status');
+  status.textContent=t('locating');
+  status.className='search-status loading';
+  document.getElementById('suggest').style.display='none';
+  const coords=await geocode(q);
+  if(!coords){
+    status.textContent=t('locError');
+    status.className='search-status error';
+    return;
+  }
+  searchLat=coords[0];searchLng=coords[1];
+  searchMode=true;
+  status.textContent='';
+  status.className='search-status';
+  document.getElementById('bar-title').textContent=t('barTitleDist');
+  applyLang();
+  render();
+}
+
+function onInput(){
+  clearTimeout(searchTimer);
+  const q=document.getElementById('srch').value.trim();
+  const box=document.getElementById('suggest');
+  if(!q){box.style.display='none';render();return;}
+  // Quick suggest from suburb/site names
+  const ql=q.toLowerCase();
+  const matches=SITES.filter(s=>{
+    const n=td(s,'name').toLowerCase();
+    return n.includes(ql)||s.addr.toLowerCase().includes(ql);
+  }).slice(0,5);
+  // Also suggest matching suburbs
+  const subMatches=Object.keys(SUBURBS).filter(k=>k.includes(ql)).slice(0,3);
+  const rows=[];
+  subMatches.forEach(sub=>{
+    rows.push(`<div class="suggest-item" onmousedown="pickSuburb(event,'${sub}')">
+      <span>📍</span><span class="suggest-name">${sub.charAt(0).toUpperCase()+sub.slice(1)}</span>
+      <span class="suggest-dist">${SUBURBS[sub]}</span></div>`);
+  });
+  matches.forEach(s=>{
+    rows.push(`<div class="suggest-item" onmousedown="pickSite(event,${s.sid})">
+      <span>${s.ic}</span><span class="suggest-name">${td(s,'name')}</span>
+      <span class="suggest-dist">${s.addr.split(',')[0]}</span></div>`);
+  });
+  // Always re-render cards to match current text
+  render();
+  if(!rows.length){box.style.display='none';return;}
+  box.innerHTML=rows.join('');
+  box.style.display='block';
+}
+
+function pickSuburb(e,sub){
+  e.preventDefault();
+  document.getElementById('srch').value=sub.charAt(0).toUpperCase()+sub.slice(1);
+  document.getElementById('suggest').style.display='none';
+  doSearch();
+}
+function pickSite(e,sid){
+  e.preventDefault();
+  const s=SITES[sid];
+  document.getElementById('srch').value=s.addr.split(',')[0];
+  document.getElementById('suggest').style.display='none';
+  doSearch();
+}
+function hideSuggest(){setTimeout(()=>{document.getElementById('suggest').style.display='none';},300);}
+
+function cl(s){return s.t==='free'?'cfree':s.t==='low'?'clow':'cappt'}
+function bl(s){return s.t==='free'?t('badgeFree'):s.t==='low'?t('badgeLow'):t('badgeAppt')}
+
+function findFoodNormalCardHTML(){
+  return `<div style="background:#EAF5EE;border:1.5px dashed #4A9B6F;border-radius:16px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:12px;">
+    <div style="font-size:24px;flex-shrink:0">🗺️</div>
+    <div style="flex:1">
+      <div style="font-size:13px;font-weight:800;color:#2D7A52;margin-bottom:3px">${t('findFoodTitle')}</div>
+      <div style="font-size:11px;color:#4A6A3A;line-height:1.6">${t('findFoodNote')}</div>
+    </div>
+    <a href="https://www.foodbank.org.au/find-food/?state=sa" target="_blank" rel="noopener noreferrer"
+       style="flex-shrink:0;background:#4A9B6F;color:#fff;font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;padding:7px 13px;border-radius:9px;text-decoration:none;white-space:nowrap">
+      ${L==='zh'?'搜索本地机构 →':'Search local →'}
+    </a>
+  </div>`;
+}
+
+function findFoodCardHTML(){
+  const q=document.getElementById('srch').value.trim();
+  // Build Foodbank Find Food URL — their tool accepts postcode or suburb in the search
+  const encoded=encodeURIComponent(q+' South Australia');
+  const ffUrl='https://www.foodbank.org.au/find-food/?state=sa&address='+encoded;
+  return `<div style="background:linear-gradient(135deg,#EAF5EE 0%,#FDF3E3 100%);border:2px solid #4A9B6F;border-radius:20px;padding:20px;margin-bottom:14px;display:flex;align-items:flex-start;gap:16px;">
+    <div style="font-size:32px;flex-shrink:0;margin-top:2px">🗺️</div>
+    <div style="flex:1">
+      <div style="font-size:14px;font-weight:800;color:#2D7A52;margin-bottom:6px">${t('findFoodTitle')}</div>
+      <div style="font-size:12px;color:#4A6A3A;line-height:1.7;margin-bottom:12px">${t('findFoodDesc')}</div>
+      <a href="${ffUrl}" target="_blank" rel="noopener noreferrer"
+         style="display:inline-flex;align-items:center;gap:6px;background:#4A9B6F;color:#fff;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;padding:8px 16px;border-radius:10px;text-decoration:none;transition:background .15s"
+         onmouseover="this.style.background='#357A56'" onmouseout="this.style.background='#4A9B6F'">
+        ${t('findFoodBtn')}
+      </a>
+      <div style="font-size:11px;color:#7A9A6A;margin-top:8px">${t('findFoodNote')}</div>
+    </div>
+  </div>`;
+}
+
+function cardHTML(s,distKm){
+  const distPill=s.isCity?`<div class="dist-pill" style="background:#EEF0FA;color:#4A5CA0">🌏 ${L==='zh'?'覆盖全 Adelaide':'Covers all Adelaide'}</div>`:distKm!=null?`<div class="dist-pill">📍 ${fmtDist(distKm)} ${t('distAway')}</div>`:'';
+  return `<a class="card ${cl(s)}" href="${s.url}" target="_blank" rel="noopener noreferrer">
+    <div class="card-stripe"></div>
+    <div class="card-head"><div class="card-icon-wrap">${s.ic}</div><span class="badge">${bl(s)}</span></div>
+    <div class="card-name">${td(s,'name')}</div>
+    <div class="card-desc">${td(s,'desc')}</div>
+    <div class="card-info">
+      <div class="info-row"><span class="info-ic">📍</span><span><strong>${s.addr}</strong></span></div>
+      <div class="info-row"><span class="info-ic">🕐</span><span>${hrs(s)}</span></div>
+      ${s.ph?`<div class="info-row"><span class="info-ic">📞</span><span><strong>${s.ph}</strong></span></div>`:''}
+    </div>
+    ${distPill}
+    ${s.appt?`<div class="appt-note">${t('apptNote')}</div>`:''}
+    <div class="card-link-hint"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M2 10 L10 2M6 2h4v4"/></svg>${t('visitSite')}</div>
+  </a>`;
+}
+
+function render(){
+  const grid=document.getElementById('grid');
+  const wrap=document.getElementById('grid-wrap');
+  const empty=document.getElementById('empty');
+
+  if(searchMode&&searchLat!=null){
+    // Distance mode: citywide services always shown separately; fixed sites sorted by distance
+    const fixed=SITES.filter(s=>!s.isCity).map(s=>({...s,distKm:haversine(searchLat,searchLng,s.lat,s.lng)}));
+    const city=SITES.filter(s=>s.isCity);
+    fixed.sort((a,b)=>a.distKm-b.distKm);
+    // Nearby = within 15km
+    const nearby=fixed.filter(s=>s.distKm<=15);
+    const others=[...fixed.filter(s=>s.distKm>15),...city];
+    document.getElementById('cnt').textContent=t('count')(fixed.length+city.length);
+    empty.style.display='none';
+    wrap.innerHTML='';
+    if(nearby.length){
+      const d1=document.createElement('div');d1.className='section-divider';d1.textContent=t('nearbyTitle');
+      const g1=document.createElement('div');g1.className='grid';
+      g1.innerHTML=nearby.map(s=>cardHTML(s,s.distKm)).join('');
+      wrap.appendChild(d1);wrap.appendChild(g1);
+    }
+    if(others.length){
+      const d2=document.createElement('div');d2.className='section-divider';d2.textContent=t('otherTitle');
+      const g2=document.createElement('div');g2.className='grid';
+      g2.innerHTML=others.map(s=>cardHTML(s,s.distKm)).join('');
+      wrap.appendChild(d2);wrap.appendChild(g2);
+    }
+    return;
+  }
+
+  // Normal filter mode — also applies text search if query present
+  const srchQ=document.getElementById('srch').value.toLowerCase().trim();
+  const list=SITES.filter(s=>{
+    const areaOk = (s.areas||[]).includes(af);
+    const filterOk=af==='all'?true:af==='free'?s.t==='free':af==='low'?s.t==='low':af==='noAppt'?!s.appt:areaOk;
+    if(!filterOk)return false;
+    if(!srchQ)return true;
+    const n=td(s,'name').toLowerCase();
+    const d=td(s,'desc').toLowerCase();
+    return n.includes(srchQ)||d.includes(srchQ)||s.addr.toLowerCase().includes(srchQ);
+  });
+  document.getElementById('cnt').textContent=t('count')(list.length);
+  if(!list.length){wrap.innerHTML='<div class="grid" id="grid"></div>';empty.style.display='block';return;}
+  empty.style.display='none';
+  const g=document.createElement('div');g.className='grid';
+  g.innerHTML=list.map(s=>cardHTML(s,null)).join('');
+  wrap.innerHTML='';
+  // prepend Find Food card in normal mode too
+  wrap.appendChild(g);
+}
+
+// Keyboard: press Enter in search box
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('srch').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});
+  L=detectLang();applyLang();render();
+});
+</script>
+</body>
+</html>
